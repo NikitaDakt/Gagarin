@@ -10,6 +10,7 @@ router = Router()
 mess = ["Фамилия Имя Отчество", "Дата рождения", "Дата смерти", "Расскажите о нем: Где он родился?", "Где он учился?",
         "Где он умер?", "Какие у него были интересы и хобби?", "Какие книги, фильмы и музыку он предпочитал?"]
 ans = []
+question_index = 0
 flag = False
 
 
@@ -27,12 +28,17 @@ async def cmd_start(message: Message):
 
 @router.message(F.text.lower() == "пройти тест")
 async def test(message: types.Message):
+    global question_index, ans
     await message.reply("Ответь на несколько вопросов про близкого человека:")
-    flag = True
+    question_index = 0
+    ans = []
 
-
-if flag:
-    @router.message()
-    async def with_puree(message: types.Message):
-        await message.reply("Ответь на несколько вопросов про близкого человека:")
-        flag = True
+@router.message()
+async def handle_answers(message: types.Message):
+    global question_index, ans
+    if question_index < len(mess):
+        ans.append(message.text)
+        await message.reply(mess[question_index])
+        question_index += 1
+    else:
+        await message.reply("Вопросы закончились. Ваши ответы сохранены.")
