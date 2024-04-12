@@ -38,7 +38,8 @@ async def handle_answers(message: types.Message):
     global question_index, ans
     if question_index < len(mess):
         ans.append(message.text)
-        await message.reply(mess[question_index])
         question_index += 1
-    else:
-        await message.reply("Вопросы закончились. Ваши ответы сохранены.")
+        if question_index < len(mess):
+            await message.reply(mess[question_index])
+        else:
+            await message.reply("Вопросы закончились. Ваши ответы сохранены.")
