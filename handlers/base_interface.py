@@ -6,8 +6,12 @@ from keyboards import main_interface
 from aiogram.types import Message
 
 router = Router()
-mess = ["Фамилия Имя Отчество", "Дата рождения", "Дата смерти", ]
+
+mess = ["Фамилия Имя Отчество", "Дата рождения", "Дата смерти", "Расскажите о нем: Где он родился?", "Где он учился?",
+        "Где он умер?", "Какие у него были интересы и хобби?", "Какие книги, фильмы и музыку он предпочитал?"]
+ans = []
 flag = False
+
 
 @router.message(Command("start"))
 async def cmd_start(message: Message):
@@ -19,18 +23,16 @@ async def cmd_start(message: Message):
         reply_markup=main_interface.start()
     )
     await message.answer("")
+
+
 @router.message(F.text.lower() == "пройти тест")
 async def test(message: types.Message):
     await message.reply("Ответь на несколько вопросов про близкого человека:")
     flag = True
+
 
 if flag:
     @router.message()
     async def with_puree(message: types.Message):
         await message.reply("Ответь на несколько вопросов про близкого человека:")
         flag = True
-
-
-
-
-
