@@ -47,7 +47,7 @@ async def handle_answers(message: types.Message):
             if not date_pattern.match(message.text):
                 await message.reply("Пожалуйста, введите дату в правильном формате (дд.мм.гггг), например, 01.01.2000.")
                 return
-        ans.append(message.text)
+        ans.append(message.text)   #dadaya
         question_index += 1
         if question_index < len(mess):
             await message.reply(mess[question_index])
