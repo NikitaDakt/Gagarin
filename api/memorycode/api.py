@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 async def get_access_token(email, password, device='bot-v0.0.1'):
     """
     Asynchronously retrieves an access token using the provided email, password, and device parameters.
@@ -67,11 +68,22 @@ async def search_pages(query_params):
 
 
 async def link_pages(access_token, link_data):
+    """
+    Asynchronously links pages using the provided access token and link data.
+
+    Parameters:
+        access_token (str): The access token for authorization.
+        link_data (dict): The data for linking the pages.
+
+    Returns:
+        dict: The JSON response from the page link operation.
+    """
     url = f"{MEMORYCODE_BASE_URL}/page/relative"
     headers = {"Authorization": f"Bearer {access_token}", "Content-Type": "application/json"}
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=json.dumps(link_data)) as response:
             return await response.json()
+
 
 async def get_individual_page_by_name(access_token, name):
     """
@@ -81,27 +93,20 @@ async def get_individual_page_by_name(access_token, name):
     If an error occurs during the request, it logs the error and returns None.
     """
     url = f"{MEMORYCODE_BASE_URL}/api/cabinet/individual-pages?name={name}"
-    headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
+    headers = {"Authorization": f"Bearer {access_token}"}
 
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url, headers=headers) as response:
-                if response.status != 200:
-                    logger.error("Ошибка при получении страницы памяти.")
-                    logger.error(f"Код ошибки: {response.status}")
-                    logger.error(f"Текст ошибки: {await response.text()}")
-                    return None
-
-                data = await response.json()
-                if data and isinstance(data, list) and data[0].get('name') == name:
+                data = await response.json(content_type=None)
+                if isinstance(data, list) and data[0].get('name') == name:
                     return data[0]
+        except (aiohttp.ContentTypeError, json.JSONDecodeError):
+            pass
 
-                logger.warning("Страница памяти не найдена.")
-                return None
-        except aiohttp.ClientError as e:
-            logger.error("Ошибка при выполнении запроса:")
-            logger.error(e)
-            return None
+        logger.warning("Страница памяти не найдена.")
+        return None
+
 
 async def main():
     """
