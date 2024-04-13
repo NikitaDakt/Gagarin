@@ -83,13 +83,14 @@ async def link_pages(access_token, link_data):
 
 async def get_individual_page_by_name(access_token, name):
     """
-    This code defines an asynchronous function get_individual_page_by_name that retrieves a specific page by name.
-    It makes a GET request to a given URL with specified headers using an aiohttp ClientSession.
-    If the response status is not 200 or the content type is not JSON, it logs errors.
-    It then processes the JSON response data by searching for a page with a matching name in the data.
-    If found, it returns the page data in JSON format; otherwise, it logs a warning and returns None. 
-    If any error occurs during the request, 
-    it logs the error and returns None.
+    Этот код определяет асинхронную функцию get_individual_page_by_name, которая извлекает определенную страницу по имени.
+    Он выполняет запрос GET к заданному URL-адресу с указанными заголовками, используя aiohttp ClientSession.
+    Если статус ответа не 200 или тип контента не JSON, он регистрирует ошибки.
+    Затем он обрабатывает данные ответа JSON, выполняя поиск страницы с совпадающим именем в данных.
+    Если он найден, он возвращает данные страницы в формате JSON; в противном случае он регистрирует предупреждение и возвращает None.
+    Если во время запроса произойдет какая-либо ошибка,
+    он регистрирует ошибку и возвращает None.
+
     """
     url = f"{MEMORYCODE_BASE_URL}/api/cabinet/individual-pages"
     headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json", "Content-Type": "application/json;charset=UTF-8"}
@@ -121,10 +122,10 @@ async def get_individual_page_by_name(access_token, name):
 
 async def get_all_memory_pages(access_token):
     """
-    This code defines an asynchronous function get_all_memory_pages that fetches all memory pages using an API endpoint.
-    It sends a GET request with specified headers and access token. If the response status is not 200, it logs an error with details.
-    If the response content is not JSON, it logs an error. Finally, it returns the JSON data of all memory pages retrieved.
-    If any error occurs during the request, it logs the error and returns None.
+    Этот код определяет асинхронную функцию get_all_memory_pages, которая извлекает все страницы памяти, используя конечную точку API.
+    Он отправляет запрос GET с указанными заголовками и токеном доступа. Если статус ответа не 200, он регистрирует ошибку с подробностями.
+    Если содержимое ответа не является JSON, регистрируется ошибка. Наконец, он возвращает данные JSON всех полученных страниц памяти.
+    Если во время запроса возникает какая-либо ошибка, она регистрируется и возвращает None.
     """
     url = f"{MEMORYCODE_BASE_URL}/api/cabinet/individual-pages"
     headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json", "Content-Type": "application/json;charset=UTF-8"}
@@ -154,7 +155,7 @@ async def get_all_memory_pages(access_token):
 
 async def main():
     """
-    A description of the entire function, its parameters, and its return types.
+    Описание всей функции, ее параметров и типов возвращаемых значений.
     """
     access_token = await get_access_token(MEMORYCODE_EMAIL, MEMORYCODE_PASSWORD)
     if access_token:
