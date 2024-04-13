@@ -1,3 +1,5 @@
+import re
+
 from aiogram import Router, F, types
 from aiogram.filters import Command
 
@@ -29,7 +31,7 @@ async def cmd_start(message: Message):
 @router.message(F.text.lower() == "пройти тест")
 async def test(message: types.Message):
     global question_index, ans
-    await message.reply("Ответь на несколько вопросов про близкого человека:")
+    await message.reply("Ответь на несколько вопросов про близкого человека:\n" + mess[0])
     question_index = 0
     ans = []
 
