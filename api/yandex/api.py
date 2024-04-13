@@ -24,7 +24,10 @@ async def get_access_token(email, password, device='bot-v0.0.1'):
 
 async def update_memory_page(initial_page_file, updated_fields_file, access_token):
     """
-    A description of the entire function, its parameters, and its return types.
+    This code defines an asynchronous function update_memory_page that updates a memory page by loading data from two JSON files, 
+    merging the data, and sending a PUT request to a specified URL with the updated data using aiohttp.
+    If the request is successful (status code 200), it logs a success message; otherwise,
+      it logs an error message with the error code and text.
     """
     # Загрузка данных из файлов JSON
     with open(initial_page_file, 'r') as file:
@@ -54,7 +57,9 @@ async def update_memory_page(initial_page_file, updated_fields_file, access_toke
 
 async def search_pages(access_token, query_params):
     """
-    A description of the entire function, its parameters, and its return types.
+    Этот код представляет собой асинхронную функцию search_pages, 
+    которая выполняет поиск страниц с использованием указанных параметров запроса.
+    Функция отправляет GET-запрос по указанному URL с параметрами запроса и возвращает результат в формате JSON.
     """
     url = f"{MEMORYCODE_BASE_URL}/page/search"
     params = {"access_token": access_token, **query_params}
@@ -62,9 +67,12 @@ async def search_pages(access_token, query_params):
         response = await session.get(url, params=params)
         return await response.json()
 
+
 async def link_pages(access_token, link_data):
     """
-    A description of the entire function, its parameters, and its return types.
+    Этот код представляет собой асинхронную функцию link_pages,
+      которая отправляет POST-запрос на указанный URL с заголовком авторизации и данными в формате JSON. 
+      Затем функция возвращает результат запроса в формате JSON.
     """
     url = f"{MEMORYCODE_BASE_URL}/page/relative"
     headers = {"Authorization": f"Bearer {access_token}"}
@@ -72,9 +80,16 @@ async def link_pages(access_token, link_data):
         response = await session.post(url, headers=headers, json=link_data)
         return await response.json()
 
+
 async def get_individual_page_by_name(access_token, name):
     """
-    A description of the entire function, its parameters, and its return types.
+    This code defines an asynchronous function get_individual_page_by_name that retrieves a specific page by name.
+    It makes a GET request to a given URL with specified headers using an aiohttp ClientSession.
+    If the response status is not 200 or the content type is not JSON, it logs errors.
+    It then processes the JSON response data by searching for a page with a matching name in the data.
+    If found, it returns the page data in JSON format; otherwise, it logs a warning and returns None. 
+    If any error occurs during the request, 
+    it logs the error and returns None.
     """
     url = f"{MEMORYCODE_BASE_URL}/api/cabinet/individual-pages"
     headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json", "Content-Type": "application/json;charset=UTF-8"}
@@ -87,20 +102,15 @@ async def get_individual_page_by_name(access_token, name):
                     logger.error(f"Код ошибки: {response.status}")
                     logger.error(f"Текст ошибки: {await response.text()}")
                     return None
-
                 content_type = response.headers.get("Content-Type", "")
                 if "application/json" not in content_type:
                     logger.error("Ошибка при получении страницы: Не JSON, получен HTML.")
                     logger.error(f"Тип контента: {content_type}")
                     return None
-
                 data = await response.json()
-                # Ищем страницу по имени
                 for page in data:
                     if isinstance(page, dict) and page.get('name') == name:
                         return json.dumps(page)
-
-                # Если страница не найдена
                 logger.warning("Страница памяти не найдена.")
                 return None
         except aiohttp.ClientError as e:
@@ -108,7 +118,14 @@ async def get_individual_page_by_name(access_token, name):
             logger.error(e)
             return None
 
+
 async def get_all_memory_pages(access_token):
+    """
+    This code defines an asynchronous function get_all_memory_pages that fetches all memory pages using an API endpoint.
+    It sends a GET request with specified headers and access token. If the response status is not 200, it logs an error with details.
+    If the response content is not JSON, it logs an error. Finally, it returns the JSON data of all memory pages retrieved.
+    If any error occurs during the request, it logs the error and returns None.
+    """
     url = f"{MEMORYCODE_BASE_URL}/api/cabinet/individual-pages"
     headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json", "Content-Type": "application/json;charset=UTF-8"}
 
