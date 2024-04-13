@@ -37,6 +37,16 @@ async def test(message: types.Message):
 async def handle_answers(message: types.Message):
     global question_index, ans
     if question_index < len(mess):
+        if question_index == 0:
+            name_pattern = re.compile(r'^[А-ЯЁ][а-яё]+\s[А-ЯЁ][а-яё]+\s[А-ЯЁ][а-яё]+$')
+            if not name_pattern.match(message.text):
+                await message.reply("Пожалуйста, введите Фамилию Имя Отчество в правильном формате, например, Иванов Иван Иванович.")
+                return
+        elif question_index == 1 or question_index == 2:
+            date_pattern = re.compile(r'^\d{1,2}\.\d{1,2}\.\d{4}$')
+            if not date_pattern.match(message.text):
+                await message.reply("Пожалуйста, введите дату в правильном формате (дд.мм.гггг), например, 01.01.2000.")
+                return
         ans.append(message.text)
         question_index += 1
         if question_index < len(mess):
