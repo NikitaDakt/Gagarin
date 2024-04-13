@@ -53,3 +53,24 @@ async def handle_answers(message: types.Message):
             await message.reply(mess[question_index])
         else:
             await message.reply("Вопросы закончились. Ваши ответы сохранены.")
+
+
+@router.message(Command("Проверить ответы"))
+async def check_answers(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(types.KeyboardButton("Очистить ответы"))
+
+    if ans:
+        response = "Ваши ответы:\n\n"
+        for i, answer in enumerate(ans, 1):
+            response += f"{i}. {answer}\n"
+        await message.answer(response, reply_markup=keyboard)
+    else:
+        await message.answer("Ответы еще не были введены.")
+
+
+@router.message(F.text.lower() == "Очистить ответы")
+async def clear_answers(message: types.Message):
+    global ans
+    ans = []
+    await message.answer("Ответы очищены.")
